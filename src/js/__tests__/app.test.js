@@ -1,86 +1,25 @@
-import specAttack from '../app';
+import Validator from '../app';
 
-describe('Attacks', () => {
-  test('attacks with description', () => {
-    const character = {
-      name: 'Лучник',
-      type: 'Bowman',
-      health: 50,
-      level: 3,
-      attack: 40,
-      defence: 10,
-      special: [
-        {
-          id: 8,
-          name: 'Двойной выстрел',
-          icon: 'http://...',
-          description: 'Двойной выстрел наносит двойной урон',
-        },
-        {
-          id: 9,
-          name: 'Нокаутирующий удар',
-          icon: 'http://...',
-          description: 'Нокаутирующий удар оглушает противника',
-        },
-      ],
-    };
+describe('validator', () => {
+  test('Допустимы только латинские буквы, символы тире -, подчёркивания _ и цифры (0-9);', () => {
+    const validator = new Validator();
+    const str = 'hello%wu';
+    const expected = 'Допустимы только латинские буквы, символы тире -, подчёркивания _ и цифры (0-9);';
 
-    const expected = [
-      {
-        id: 8,
-        name: 'Двойной выстрел',
-        description: 'Двойной выстрел наносит двойной урон',
-        icon: 'http://...',
-      },
-      {
-        id: 9,
-        name: 'Нокаутирующий удар',
-        description: 'Нокаутирующий удар оглушает противника',
-        icon: 'http://...',
-      },
-    ];
-
-    expect(specAttack(character)).toEqual(expected);
+    expect(validator.validateUsername(str)).toEqual(expected);
   });
+  test('Имя не должно содержать подряд более трёх цифр, а также начинаться и заканчиваться цифрами, символами подчёркивания или тире.', () => {
+    const validator = new Validator();
+    const str = '-hbjkl111hghfuy_';
+    const expected = 'Имя не должно содержать подряд более трёх цифр, а также начинаться и заканчиваться цифрами, символами подчёркивания или тире.';
 
-  test('attacks with missing description', () => {
-    const character = {
-      name: 'Лучник',
-      type: 'Bowman',
-      health: 50,
-      level: 3,
-      attack: 40,
-      defence: 10,
-      special: [
-        {
-          id: 8,
-          name: 'Двойной выстрел',
-          icon: 'http://...',
-          description: 'Двойной выстрел наносит двойной урон',
-        },
-        {
-          id: 9,
-          name: 'Нокаутирующий удар',
-          icon: 'http://...',
-        },
-      ],
-    };
+    expect(validator.validateUsername(str)).toEqual(expected);
+  });
+  test('Все условия выполнены', () => {
+    const validator = new Validator();
+    const str = 'true_us1-ername';
+    const expected = 'Все условия выполнены';
 
-    const expected = [
-      {
-        id: 8,
-        name: 'Двойной выстрел',
-        description: 'Двойной выстрел наносит двойной урон',
-        icon: 'http://...',
-      },
-      {
-        id: 9,
-        name: 'Нокаутирующий удар',
-        description: 'Описание недоступно',
-        icon: 'http://...',
-      },
-    ];
-
-    expect(specAttack(character)).toEqual(expected);
+    expect(validator.validateUsername(str)).toEqual(expected);
   });
 });
